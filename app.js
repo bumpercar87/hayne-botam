@@ -1,5 +1,5 @@
 // ⚠️ 아래 URL을 Apps Script 배포 후 받은 URL로 교체하세요
-const API = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbyMmasRK9lVCV3NfYiqMMtJpEHY0sTZanFuKFOr39aPWs2D_eKd2X56CicW_rPBc9SJ/exec/exec";
+const API = "https://script.google.com/macros/s/여기에_배포URL_붙여넣기/exec";
 
 const BOSSES = ["카스파","데스나이트","거대여왕개미","드레이크","흑장로","안타라스","바이아키스","발라카스","자켄","코어","오르펜","퀸앤트","기타(직접입력)"];
 
@@ -12,11 +12,13 @@ const { useState, useEffect, useRef } = React;
 
 async function api(params) {
   const url = API + "?" + new URLSearchParams(params);
-  const r = await fetch(url);
+  const r = await fetch(url, {redirect: "follow"});
   return r.json();
 }
 async function apiPost(body) {
-  const r = await fetch(API, { method:"POST", body: JSON.stringify(body) });
+  const params = { ...body, data: JSON.stringify(body.data || {}), id: body.id };
+  const url = API + "?" + new URLSearchParams(params);
+  const r = await fetch(url, {redirect: "follow"});
   return r.json();
 }
 
