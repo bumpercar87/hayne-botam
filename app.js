@@ -1,5 +1,5 @@
 // ⚠️ 아래 URL을 Apps Script 배포 후 받은 URL로 교체하세요
-const API = "https://script.google.com/macros/s/여기에_배포URL_붙여넣기/exec";
+const API = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbweI0SuVSS3zYvYF19CMMV-SXJddl_QqpDFKaKUdO73vG5dNeq5bNsTMExq10E5NPcr/exec/exec";
 
 const BOSSES = ["카스파","데스나이트","거대여왕개미","드레이크","흑장로","안타라스","바이아키스","발라카스","자켄","코어","오르펜","퀸앤트","기타(직접입력)"];
 
