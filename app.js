@@ -1,4 +1,5 @@
-const API = "https://script.google.com/macros/s/AKfycbwQ6B9ntaUAedqelWug9kw4v1ukmSGFX2PBiNjq8PPei-PRmKXDe0lmvqZT0yKPuESR/exec";
+const API = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwTZgjljUvoG6D6zQMezpPnuL8alfMab74x_5pzACvBxfwR8FA0CgE-suK1Um-gb1NZ/exec/exec";
+
 const BOSSES = ["카스파","데스나이트","거대여왕개미","드레이크","흑장로","안타라스","바이아키스","발라카스","자켄","코어","오르펜","퀸앤트","기타(직접입력)"];
 
 const C = {
@@ -8,16 +9,23 @@ const C = {
 
 const { useState, useEffect, useRef } = React;
 
-async function api(params) {
-  const url = API + "?" + new URLSearchParams(params);
-  const r = await fetch(url, {redirect: "follow"});
-  return r.json();
+function api(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = "cb_" + Date.now();
+    const script = document.createElement("script");
+    const url = API + "?" + new URLSearchParams({...params, callback: cbName});
+    window[cbName] = (data) => {
+      delete window[cbName];
+      document.body.removeChild(script);
+      resolve(data);
+    };
+    script.onerror = () => { delete window[cbName]; reject(new Error("network error")); };
+    script.src = url;
+    document.body.appendChild(script);
+  });
 }
-async function apiPost(body) {
-  const params = { ...body, data: JSON.stringify(body.data || {}), id: body.id };
-  const url = API + "?" + new URLSearchParams(params);
-  const r = await fetch(url, {redirect: "follow"});
-  return r.json();
+function apiPost(body) {
+  return api({...body, data: JSON.stringify(body.data || {}), id: body.id || ""});
 }
 
 function App() {
