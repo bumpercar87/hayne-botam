@@ -10,19 +10,13 @@ const C = {
 const { useState, useEffect, useRef } = React;
 
 async function api(params) {
-  const target = API + "?" + new URLSearchParams(params);
-  const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(target);
-  const r = await fetch(url);
-  const d = await r.json();
-  return JSON.parse(d.contents);
+  const r = await fetch("/api/sheets?" + new URLSearchParams(params));
+  return r.json();
 }
 async function apiPost(body) {
   const params = { action: body.action, data: JSON.stringify(body.data || {}), id: body.id || "" };
-  const target = API + "?" + new URLSearchParams(params);
-  const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(target);
-  const r = await fetch(url);
-  const d = await r.json();
-  return JSON.parse(d.contents);
+  const r = await fetch("/api/sheets?" + new URLSearchParams(params));
+  return r.json();
 }
 
 function App() {
