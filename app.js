@@ -332,7 +332,6 @@ function SessionDetail({ session, onBack, onUpdate }) {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-const API = "https://script.google.com/macros/s/AKfycbwTZgjljUvoG6D6zQMezpPnuL8alfMab74x_5pzACvBxfwR8FA0CgE-suK1Um-gb1NZ/exec";
 
 const BOSSES = ["카스파", "데스나이트", "거대여왕개미", "드레이크", "흑장로", "안타라스", "바이아키스", "발라카스", "자켄", "코어", "오르펜", "퀸앤트", "기타(직접입력)"];
 
