@@ -11,16 +11,18 @@ const { useState, useEffect, useRef } = React;
 
 async function api(params) {
   const target = API + "?" + new URLSearchParams(params);
-  const url = "https://corsproxy.io/?" + target;
+  const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(target);
   const r = await fetch(url);
-  return r.json();
+  const d = await r.json();
+  return JSON.parse(d.contents);
 }
 async function apiPost(body) {
   const params = { action: body.action, data: JSON.stringify(body.data || {}), id: body.id || "" };
   const target = API + "?" + new URLSearchParams(params);
-  const url = "https://corsproxy.io/?" + target;
+  const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(target);
   const r = await fetch(url);
-  return r.json();
+  const d = await r.json();
+  return JSON.parse(d.contents);
 }
 
 function App() {
