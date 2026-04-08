@@ -10,13 +10,15 @@ const C = {
 const { useState, useEffect, useRef } = React;
 
 async function api(params) {
-  const url = "https://corsproxy.io/?" + encodeURIComponent(API + "?" + new URLSearchParams(params));
+  const target = API + "?" + new URLSearchParams(params);
+  const url = "https://corsproxy.io/?" + target;
   const r = await fetch(url);
   return r.json();
 }
 async function apiPost(body) {
   const params = { action: body.action, data: JSON.stringify(body.data || {}), id: body.id || "" };
-  const url = "https://corsproxy.io/?" + encodeURIComponent(API + "?" + new URLSearchParams(params));
+  const target = API + "?" + new URLSearchParams(params);
+  const url = "https://corsproxy.io/?" + target;
   const r = await fetch(url);
   return r.json();
 }
