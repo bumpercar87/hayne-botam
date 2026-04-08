@@ -18,7 +18,6 @@ async function apiPost(body) {
   const r = await fetch("/api/sheets?" + new URLSearchParams(params));
   return r.json();
 }
-
 function App() {
   const [user, setUser] = useState(() => { try { return JSON.parse(sessionStorage.getItem("botam_user")); } catch { return null; } });
   const [sessions, setSessions] = useState([]);
