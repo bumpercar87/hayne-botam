@@ -21,6 +21,17 @@ async function apiPost(body) {
   return r.json();
 }
 
+async function ocrImage(file) {
+  const b64 = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});
+  const resp = await fetch("/api/ocr", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({image: b64, mediaType: file.type})
+  });
+  const d = await resp.json();
+  return d.text || "";
+}
+
 function App() {
   const [user, setUser] = useState(() => { try { return JSON.parse(sessionStorage.getItem("botam_user")); } catch { return null; } });
   const [sessions, setSessions] = useState([]);
@@ -28,9 +39,7 @@ function App() {
   const [view, setView] = useState("list");
   const [selectedId, setSelectedId] = useState(null);
 
-  useEffect(() => {
-    if (user) fetchSessions();
-  }, [user]);
+  useEffect(() => { if (user) fetchSessions(); }, [user]);
 
   const fetchSessions = async () => {
     setLoading(true);
@@ -39,15 +48,8 @@ function App() {
     setLoading(false);
   };
 
-  const handleLogin = (u) => {
-    sessionStorage.setItem("botam_user", JSON.stringify(u));
-    setUser(u);
-  };
-  const handleLogout = () => {
-    sessionStorage.removeItem("botam_user");
-    setUser(null); setSessions([]); setView("list");
-  };
-
+  const handleLogin = (u) => { sessionStorage.setItem("botam_user", JSON.stringify(u)); setUser(u); };
+  const handleLogout = () => { sessionStorage.removeItem("botam_user"); setUser(null); setSessions([]); setView("list"); };
   const goList = () => { setView("list"); setSelectedId(null); fetchSessions(); };
   const session = sessions.find(s => String(s.id) === String(selectedId));
 
@@ -146,11 +148,8 @@ function NewSession({ onDone }) {
   const handleImg = async (e) => {
     const file = e.target.files[0]; if (!file) return; setImgLoading(true);
     try {
-      const b64 = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});
-      const resp = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,
-          messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:file.type,data:b64}},{type:"text",text:"이 리니지 게임 스크린샷에서 캐릭터 닉네임만 추출해줘. 쉼표로 구분해서 닉네임만."}]}]})});
-      const d = await resp.json(); addMembers(d.content?.find(c=>c.type==="text")?.text||"");
+      const text = await ocrImage(file);
+      addMembers(text);
     } catch(err){ alert("인식 실패: "+err.message); }
     setImgLoading(false); e.target.value="";
   };
